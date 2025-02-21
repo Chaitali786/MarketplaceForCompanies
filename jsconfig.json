@@ -1,7 +1,15 @@
 {
   "compilerOptions": {
+    "jsx": "preserve",          // Enable JSX
+    "jsxImportSource": "react", // Ensure React is used as the JSX source
+    "allowJs": true,            // Allow JavaScript files
+    "strict": true,             // Enforce strict type-checking
+    "module": "ESNext",         // Use ESNext modules
+    "moduleResolution": "Node", // Use Node.js module resolution
+    "target": "ESNext",         // Target latest JavaScript
+    "baseUrl": ".",             // Base URL for module resolution
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./*"]            // Support @ imports (e.g., "@/lib/supabase")
     }
   }
 }
