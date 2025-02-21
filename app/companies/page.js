@@ -1,23 +1,43 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import { supabase } from "../../lib/supabase";
 
+export default function CompaniesPage() {
+  const [companies, setCompanies] = useState([]);
 
-export default async function CompaniesPage() {
-  // Fetch companies from Supabase
-  const { data: companies, error } = await supabase.from("companies").select("*");
+  useEffect(() => {
+    const fetchCompanies = async () => {
+      try {
+        // ✅ 1. Fetch from Supabase
+        const { data: supabaseData, error } = await supabase.from("companies").select("*");
+        if (error) throw new Error(`Supabase: ${error.message}`);
 
-  if (error) {
-    console.error("Error fetching companies:", error.message);
-    return <div>Error loading companies.</div>;
-  }
+        // ✅ 2. Fetch from JSON
+        const response = await fetch("/data/companies.json");
+        if (!response.ok) throw new Error("Failed to fetch JSON data");
+        const jsonData = await response.json();
+
+        // ✅ 3. Combine both arrays into one
+        const combinedData = [...jsonData, ...supabaseData];
+
+        setCompanies(combinedData);
+      } catch (err) {
+        console.error(err.message);
+      }
+    };
+
+    fetchCompanies();
+  }, []);
 
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">Company Listings</h1>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {companies.map((company) => (
-          <div key={company.id} className="border p-4 rounded-lg shadow-md">
+          <div key={company.id || company.name} className="border p-4 rounded-lg shadow-md">
             <img
-              src={company.image_url || "https://via.placeholder.com/150"}
+              src={company.image_url || company.image || "https://via.placeholder.com/150"}
               alt={company.name}
               className="w-full h-40 object-cover rounded"
             />

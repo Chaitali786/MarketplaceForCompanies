@@ -1,0 +1,39 @@
+[
+    {
+      "id": 1,
+      "name": "TechNova Solutions",
+      "description": "Innovative software solutions for businesses worldwide.",
+      "price": 500000,
+      "industry": "Technology",
+      "image": "https://via.placeholder.com/150",
+      "seller": {
+        "name": "Alice Johnson",
+        "email": "alice@example.com"
+      }
+    },
+    {
+      "id": 2,
+      "name": "GreenHarvest Farms",
+      "description": "Sustainable farming with a focus on organic produce.",
+      "price": 300000,
+      "industry": "Agriculture",
+      "image": "https://via.placeholder.com/150",
+      "seller": {
+        "name": "Bob Smith",
+        "email": "bob@example.com"
+      }
+    },
+    {
+      "id": 3,
+      "name": "UrbanStyle Apparel",
+      "description": "Trendy and affordable fashion for all ages.",
+      "price": 250000,
+      "industry": "Retail",
+      "image": "https://via.placeholder.com/150",
+      "seller": {
+        "name": "Carol Lee",
+        "email": "carol@example.com"
+      }
+    }
+  ]
+  
