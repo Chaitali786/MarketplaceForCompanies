@@ -55,7 +55,7 @@ export default function Navbar() {
             <span className="mr-4">Welcome, {username}!</span>
           ) : (
             <Link href="/userauth/login" className="mr-4">
-              Login
+              
             </Link>
           )}
 

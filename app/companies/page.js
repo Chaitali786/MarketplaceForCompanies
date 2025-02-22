@@ -93,7 +93,7 @@ export default function CompaniesPage() {
             />
             <h2 className="text-xl font-semibold mt-2">{company.name}</h2>
             <p className="text-gray-600">{company.description}</p>
-            <p className="text-green-500 font-bold mt-2">${company.price}</p>
+            <p className="text-green-500 font-bold mt-2">{company.price} SEK</p>
             <p className="text-sm text-gray-500">Industry: {company.industry}</p>
           </div>
         ))}

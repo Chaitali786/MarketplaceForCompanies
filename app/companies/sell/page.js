@@ -50,8 +50,12 @@ export default function SellCompanyPage() {
 
     const { data, error } = await supabase.from("companies").insert([
       {
-        ...formData,
-        seller_email: user.email, // Store the logged-in user's email
+        name: formData.name,
+        description: formData.description,
+        price: formData.price,
+        industry: formData.industry,
+        image_url: formData.image_url,
+        seller_email: user.email, 
       },
     ]);
 
@@ -61,6 +65,10 @@ export default function SellCompanyPage() {
       alert("Company listed successfully!");
       router.push("/companies");
     }
+  };
+  //Handle for Cancle 
+  const handleCancel = () => {
+    router.push("/companies");
   };
 
   return (
@@ -98,7 +106,7 @@ export default function SellCompanyPage() {
             </div>
 
             <div>
-              <label className="block font-semibold mb-1">Price ($)</label>
+              <label className="block font-semibold mb-1">Price SEK</label>
               <input
                 type="number"
                 name="price"
@@ -123,6 +131,7 @@ export default function SellCompanyPage() {
                 <option value="Healthcare">Healthcare</option>
                 <option value="Finance">Finance</option>
                 <option value="Retail">Retail</option>
+                <option value="Retail">Food</option>
                 <option value="Other">Other</option>
               </select>
             </div>
@@ -138,12 +147,19 @@ export default function SellCompanyPage() {
               />
             </div>
 
-            <div>
+            <div className="flex justify-between">
               <button
                 type="submit"
-                className="w-full bg-blue-500 text-white p-2 rounded font-bold"
+                className="bg-red-500 text-white px-3 py-1 rounded font-bold"
               >
                 Submit
+              </button>
+              <button
+                type="button"
+                onClick={handleCancel}
+                className="bg-red-500 text-white px-3 py-1 rounded font-bold"
+              >
+                Cancel
               </button>
             </div>
           </form>
