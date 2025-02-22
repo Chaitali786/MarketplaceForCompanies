@@ -5,10 +5,10 @@ import { supabase } from "../../lib/supabase";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
-export default function Navbar() {
+export default function Navbar(userRole) {
   const router = useRouter();
   const [username, setUsername] = useState(null);
-
+  console.log("User Role at Navbar:", userRole);
   useEffect(() => {
     const fetchUser = async () => {
       const { data: { session } } = await supabase.auth.getSession();
@@ -61,7 +61,9 @@ export default function Navbar() {
 
           <Link href="/userauth/signup" className="hover:underline">Sign Up</Link>
           <Link href="/companies" className="hover:underline">Companies</Link>
-          <Link href="/companies/sell" className="hover:underline">Sell</Link>
+          
+          {/* ✅ Show "Sell" button only if userRole is "seller" */}
+          {userRole?.userRole === "seller" && <a href="/companies/sell" className="mr-4">Sell</a>}
 
           {username && (
             <button onClick={handleLogout} className="bg-red-500 px-4 py-2 rounded">

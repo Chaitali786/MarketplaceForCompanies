@@ -43,7 +43,7 @@ export default function LoginPage() {
                 setMessage("Login successful! Redirecting..."); // ✅ Success message
 
                 router.push("/companies"); // ✅ Redirect to companies page
-                router.refresh();
+                //router.refresh();
         } catch (err) {
             setError(err.message || "Invalid email or password."); // ✅ Error message
         }
