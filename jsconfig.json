@@ -9,7 +9,7 @@
     "target": "ESNext",         // Target latest JavaScript
     "baseUrl": ".",             // Base URL for module resolution
     "paths": {
-      "@/*": ["./*"]            // Support @ imports (e.g., "@/lib/supabase")
+      "@/*": ["./*"]            // ./* Support @ imports (e.g., "@/lib/supabase")
     }
   }
 }

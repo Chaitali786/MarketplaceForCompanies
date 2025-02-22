@@ -2,102 +2,80 @@
 
 import { useEffect, useState } from "react";
 import { supabase } from "../../lib/supabase";
+import CompanyCard from "../components/CompanyCard";
 
 export default function CompaniesPage() {
-  const [companies, setCompanies] = useState([]);
-  const [search, setSearch] = useState("");
-  const [industry, setIndustry] = useState("");
-  const [maxPrice, setMaxPrice] = useState("");
+    const [companies, setCompanies] = useState([]);
+    const [userRole, setUserRole] = useState(null);
 
-  // ✅ Load both Supabase and JSON data
-  const fetchCompanies = async () => {
-    try {
-      // Supabase Fetch
-      const { data: supabaseData, error } = await supabase.from("companies").select("*");
-      if (error) throw error;
+    const fetchCompanies = async () => {
+        try {
+            const { data: supabaseData, error } = await supabase.from("companies").select("*");
+            if (error) throw error;
 
-      // JSON Fetch
-      const response = await fetch("/data/companies.json")
-      const jsonData = await response.json();
+            const response = await fetch("/data/companies.json");
+            const jsonData = await response.json();
 
-      // Combine both datasets
-      const combinedData = [...supabaseData, ...jsonData];
-      setCompanies(combinedData);
-    } catch (error) {
-      console.error("Failed to fetch data:", error.message);
-    }
-  };
+            setCompanies([...supabaseData, ...jsonData]);
+        } catch (error) {
+            console.error("Failed to fetch data:", error.message);
+        }
+    };
 
-  // ✅ Fetch companies on page load
-  useEffect(() => {
-    fetchCompanies();
-  }, []);
+    const getUserRole = async () => {
+        try {
+            const { data: user, error: userError } = await supabase.auth.getUser();
+            console.log("User response from supabase.auth.getUser():", user);
 
-  // ✅ Filter the companies based on search and filters
-  const filteredCompanies = companies.filter((company) => {
-    const matchesSearch = company.name.toLowerCase().includes(search.toLowerCase()) ||
-                          company.description.toLowerCase().includes(search.toLowerCase());
-    const matchesIndustry = industry ? company.industry === industry : true;
-    const matchesPrice = maxPrice ? company.price <= parseFloat(maxPrice) : true;
+            if (userError) throw userError;
 
-    return matchesSearch && matchesIndustry && matchesPrice;
-  });
+            const userId = user?.user?.id;
+            console.log("User ID:", userId);
 
-  // ✅ Extract unique industries for dropdown
-  const uniqueIndustries = [...new Set(companies.map((c) => c.industry))];
+            if (userId) {
+                const { data: profile, error: profileError } = await supabase
+                    .from("profiles")
+                    .select("role")
+                    .eq("id", userId)
+                    .single();
 
-  return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Company Listings</h1>
+                console.log("Profile response from Supabase:", profile);
 
-      {/* ✅ Search and Filter Controls */}
-      <div className="flex gap-4 mb-4">
-        <input
-          type="text"
-          placeholder="Search by name or description"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="border p-2 rounded w-1/3"
-        />
+                if (profileError) throw profileError;
 
-        <select
-          value={industry}
-          onChange={(e) => setIndustry(e.target.value)}
-          className="border p-2 rounded w-1/3"
-        >
-          <option value="">All Industries</option>
-          {uniqueIndustries.map((ind, index) => (
-            <option key={index} value={ind}>
-              {ind}
-            </option>
-          ))}
-        </select>
+                if (profile?.role) {
+                    setUserRole(profile.role.toLowerCase());
+                    console.log("User role set in state:", profile.role.toLowerCase());
+                } else {
+                    console.warn("No role found for this user.");
+                }
+            } else {
+                console.warn("User ID not found.");
+            }
+        } catch (error) {
+            console.error("Error fetching user role:", error.message);
+        }
+    };
 
-        <input
-          type="number"
-          placeholder="Max Price"
-          value={maxPrice}
-          onChange={(e) => setMaxPrice(e.target.value)}
-          className="border p-2 rounded w-1/3"
-        />
-      </div>
+    // ✅ Fetch companies when the component mounts
+    useEffect(() => {
+        fetchCompanies();
+    }, []);
 
-      {/* ✅ Display Filtered Companies */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {filteredCompanies.map((company) => (
-          <div key={`${company.id}-${company.name}`} className="border p-4 rounded-lg shadow-md">
-            <img
-              src={company.image_url || "https://via.placeholder.com/150"}
-              alt={company.name}
-              className="w-full h-40 object-cover rounded"
-            />
-            <h2 className="text-xl font-semibold mt-2">{company.name}</h2>
-            <p className="text-gray-600">{company.description}</p>
-            <p className="text-green-500 font-bold mt-2">{company.price} SEK</p>
-            <p className="text-sm text-gray-500">Industry: {company.industry}</p>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
+    // ✅ Fetch user role when the component mounts
+    useEffect(() => {
+        getUserRole();
+    }, []);
+
+    return (
+        <div className="container mx-auto p-4">
+            <h1 className="text-2xl font-bold mb-4">Company Listings</h1>
+             {/* <p>User Role: {userRole}</p>*/}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {companies.map((company) => (
+                    <CompanyCard key={company.id} company={company} userRole={userRole} />
+                ))}
+            </div>
+        </div>
+    );
 }
