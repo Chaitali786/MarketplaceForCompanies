@@ -59,7 +59,7 @@ export default function Navbar(userRole) {
             </Link>
           )}
 
-          <Link href="/userauth/signup" className="hover:underline">Sign Up</Link>
+          <Link href="/userauth/signup" className="hover:underline">SignUp</Link>
           <Link href="/companies" className="hover:underline">Companies</Link>
           
           {/* ✅ Show "Sell" button only if userRole is "seller" */}

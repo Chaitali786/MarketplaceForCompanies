@@ -15,37 +15,30 @@ export default function LoginPage() {
         e.preventDefault();
         setMessage("");
         setError("");
-
+    
         try {
             const { data, error: loginError } = await supabase.auth.signInWithPassword({
                 email,
                 password,
             });
             if (loginError) throw loginError;
-
-            const { data: profile } = await supabase
-                .from("profiles")
-                .select("role")
-                .eq("id", data.user.id)
-                .single();
-
-                //console.log("Profile data:", profile);
-                //console.log("Profile error:", profileError);
-                console.log("User ID:", data.user.id);
-                console.log("User ID from Supabase auth:", data.user.id);
-                console.log("Supabase profile response:", profile);
-                console.log("Supabase response:", profile, error);
-                console.log("Profile role:", profile.role.toLowerCase());
-                console.log("User ID from auth:", data.user.id);
-            if (!profile || !profile.role) throw new Error("Invalid role. Please contact admin.");
-
-                const userRole = profile.role.toLowerCase();
-                setMessage("Login successful! Redirecting..."); // ✅ Success message
-
-                router.push("/companies"); // ✅ Redirect to companies page
-                //router.refresh();
+    
+            const user = data.user;
+            if (user) {
+                const { data: profile } = await supabase
+                    .from("profiles")
+                    .select("role")
+                    .eq("id", user.id)
+                    .single();
+                if (profile?.role) {
+                    localStorage.setItem("userRole", profile.role.toLowerCase()); // ✅ Store role in localStorage
+                    router.push(profile.role.toLowerCase() === "buyer" ? "/companies" : "/companies/sell");
+                } else {
+                    throw new Error("Invalid role. Please contact admin.");
+                }
+            }
         } catch (err) {
-            setError(err.message || "Invalid email or password."); // ✅ Error message
+            setError(err.message || "Invalid email or password.");
         }
     };
 

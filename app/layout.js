@@ -3,41 +3,58 @@
 import Navbar from "./components/Navbar";
 import { supabase } from "../lib/supabase";
 import { useEffect, useState } from "react";
-import "./globals.css"; 
+import "./globals.css";
 
 export default function RootLayout({ children }) {
-    const [userRole, setUserRole] = useState(null);
-    console.log("User Role at Layout:", userRole);
-    // ✅ Get user role when the app loads
-    const getUserRole = async () => {
-        try {
-            const { data: user, error } = await supabase.auth.getUser();
-            if (error) throw error;
-
-            if (user?.user) {
-                const { data: profile, error: profileError } = await supabase
-                    .from("profiles")
-                    .select("role")
-                    .eq("id", user.user.id) // ✅ Corrected: user.user.id
-                    .single();
-
-                if (profileError) throw profileError;
-
-                setUserRole(profile?.role?.toLowerCase() || null);
-            }
-        } catch (err) {
-            console.error("Failed to get user role:", err.message);
-        }
-    };
+    const [userRole, setUserRole] = useState(() => {
+        // ✅ Initialize from localStorage if available
+        return typeof window !== "undefined" ? localStorage.getItem("userRole") : null;
+    });
 
     useEffect(() => {
-        getUserRole();
+        const getUserRole = async (user) => {
+            try {
+                if (user) {
+                    const { data: profile } = await supabase
+                        .from("profiles")
+                        .select("role")
+                        .eq("id", user.id)
+                        .single();
+                    if (profile?.role) {
+                        setUserRole(profile.role.toLowerCase());
+                        localStorage.setItem("userRole", profile.role.toLowerCase()); // ✅ Store in localStorage
+                    }
+                }
+            } catch (error) {
+                console.error("Failed to get user role:", error.message);
+            }
+        };
+
+        const fetchUser = async () => {
+            try {
+                const { data: sessionData } = await supabase.auth.getSession();
+                const user = sessionData?.session?.user || null;
+                getUserRole(user);
+            } catch (error) {
+                console.error("Failed to get user session:", error.message);
+            }
+        };
+
+        fetchUser();
+
+        const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
+            getUserRole(session?.user || null);
+        });
+
+        return () => {
+            authListener.subscription.unsubscribe();
+        };
     }, []);
 
     return (
         <html lang="en">
             <body>
-                <Navbar userRole={userRole} /> {/* ✅ Pass userRole as prop */}
+                <Navbar userRole={userRole} />
                 {children}
             </body>
         </html>
