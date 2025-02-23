@@ -147,21 +147,22 @@ export default function SellCompanyPage() {
               />
             </div>
 
-            <div className="flex justify-between">
+            <div className="flex justify-center space-x-3">
               <button
                 type="submit"
-                className="bg-red-500 text-white px-3 py-1 rounded font-bold"
+                className="bg-red-500 text-white px-4 py-1 rounded-md font-semibold hover:bg-red-600 transition-colors"
               >
                 Submit
               </button>
               <button
                 type="button"
                 onClick={handleCancel}
-                className="bg-red-500 text-white px-3 py-1 rounded font-bold"
+                className="bg-gray-300 text-gray-700 px-4 py-1 rounded-md font-semibold hover:bg-gray-400 transition-colors"
               >
                 Cancel
               </button>
             </div>
+
           </form>
         </div>
       )}

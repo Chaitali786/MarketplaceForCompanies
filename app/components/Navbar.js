@@ -50,7 +50,10 @@ export default function Navbar(userRole) {
 
                 <div className="navbar-links hidden md:flex space-x-4">
                     {username ? (
-                        <span className="mr-4">Welcome, {username}!</span>
+                       <span className="mr-4  flex items-center space-x-1">
+                       <span>Welcome,</span>
+                       <span className="w-24 text-sm truncate">{username}</span>!
+                       </span>
                     ) : (
                       <>
                       <Link href="/userauth/signup" className="hover:underline">SignUp</Link>
@@ -71,9 +74,9 @@ export default function Navbar(userRole) {
                     )}
 
                     {username && (
-                        <button onClick={handleLogout} className="bg-red-500 px-4 py-2 rounded">
-                            Logout
-                        </button>
+                        <span onClick={handleLogout} className="cursor-pointer hover:underline text-white">
+                        Logout
+                       </span>
                     )}
                 </div>
             </div>
@@ -81,7 +84,10 @@ export default function Navbar(userRole) {
             {isOpen && (
                 <div className="navbar-mobile-menu flex flex-col md:hidden space-y-2 p-4">
                     {username ? (
-                        <span className="mr-4">Welcome, {username}!</span>
+                       <span className="mr-4  flex items-center space-x-1">
+                       <span>Welcome,</span>
+                       <span className="w-24 text-sm truncate">{username}</span>!
+                       </span>
                     ) : (
                         <Link href="/userauth/signup" className="hover:underline">SignUp</Link>
                     )}
@@ -98,9 +104,9 @@ export default function Navbar(userRole) {
                     )}
 
                     {username && (
-                        <button onClick={handleLogout} className="bg-red-500 px-4 py-2 rounded">
-                            Logout
-                        </button>
+                         <span onClick={handleLogout} className="cursor-pointer hover:underline text-white">
+                         Logout
+                        </span>
                     )}
                 </div>
             )}
