@@ -64,7 +64,8 @@ export default function Navbar(userRole) {
           
           {/* ✅ Show "Sell" button only if userRole is "seller" */}
           {userRole?.userRole === "seller" && <a href="/companies/sell" className="mr-4">Sell</a>}
-
+          {userRole?.userRole === "seller" && <a href="/companies/buyer" className="mr-4">Cart</a>}
+          
           {username && (
             <button onClick={handleLogout} className="bg-red-500 px-4 py-2 rounded">
               Logout
