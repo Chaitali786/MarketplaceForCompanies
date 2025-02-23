@@ -35,3 +35,25 @@ body {
   margin: 0 auto;
   padding: 20px;
 }
+/* ✅ Responsive Navbar Styles */
+.navbar {
+  @apply flex justify-between items-center p-4 bg-gray-800 text-white;
+}
+
+.navbar-links {
+  @apply hidden md:flex space-x-4 items-center;
+}
+
+.navbar-mobile {
+  @apply md:hidden block;
+}
+
+.navbar-mobile-menu {
+  @apply flex flex-col space-y-4 mt-4;
+}
+
+@media (max-width: 768px) {
+  nav {
+    display: none; /* Ensure this is not causing issues */
+  }
+}
