@@ -7,21 +7,28 @@ export default function InterestedBuyersPage() {
   const [buyers, setBuyers] = useState([]);
   const [user, setUser] = useState(null);
 
-  // ✅ Fetch interested buyers
-  const fetchInterestedBuyers = async (userEmail) => {
+  const fetchInterests = async (userEmail) => {
     const { data, error } = await supabase
       .from("interests")
-      .select(`id, user_email, companies(name)`)
-      .eq("companies.seller_email", userEmail);
+      .select(`
+        id, 
+        user_email, 
+        company_name,
+        companies ( name, seller_email )
+      `);
+
+    console.log("Supabase Interests With Join - Data:", data);
 
     if (error) {
-      console.error("Error fetching buyers:", error.message);
+      console.error("Error fetching interests:", error.message);
     } else {
-      setBuyers(data);
+      const filteredBuyers = data.filter(
+        (buyer) => buyer.companies?.seller_email === userEmail
+      );
+      setBuyers(filteredBuyers || []); // ✅ Now this works
     }
   };
 
-  // ✅ Check user and fetch buyers
   useEffect(() => {
     const fetchUser = async () => {
       const {
@@ -30,7 +37,14 @@ export default function InterestedBuyersPage() {
 
       if (user) {
         setUser(user);
-        await fetchInterestedBuyers(user.email); // Pass email to fetch function
+
+        if (user.user_metadata.role !== "seller") {
+          alert("Access denied: Only sellers can view this page.");
+          window.location.href = "/";
+          return;
+        }
+
+        await fetchInterests(user.email); // ✅ Call fetchInterests here
       }
     };
 
@@ -48,7 +62,7 @@ export default function InterestedBuyersPage() {
           {buyers.map((buyer) => (
             <li key={buyer.id} className="border p-4 rounded shadow">
               <p className="font-bold">Buyer: {buyer.user_email}</p>
-              <p>Interested in: {buyer.companies.name}</p>
+              <p>Interested in: {buyer.company_name}</p>
             </li>
           ))}
         </ul>

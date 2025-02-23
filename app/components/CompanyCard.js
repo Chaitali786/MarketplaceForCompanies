@@ -6,13 +6,14 @@ export default function CompanyCard({ company, userRole }) {
 
   const handleExpressInterest = async () => {
     try {
-      const { data: user } = await supabase.auth.getUser();
-      if (!user || !user.user.id) throw new Error("User not authenticated.");
+      const { data: user, error: userError } = await supabase.auth.getUser();
+      if (userError || !user?.user) throw new Error("User not authenticated.");
   
       const { error } = await supabase.from("interests").insert({
-        company_name: company.name,          // text
-        buyer_id: user.user.id,           // UUID
-        seller_id: company.seller_id      // UUID
+        company_name: company.name,           // Use company name
+        buyer_id: user.user.id,               // Buyer's ID
+        user_email: user.user.email,          // ✅ Save buyer's email
+        seller_id: company.seller_id,         // Seller's ID
       });
   
       if (error) throw error;
@@ -23,7 +24,6 @@ export default function CompanyCard({ company, userRole }) {
     }
   };
   
-
   return (
     <div className="border p-4 rounded shadow">
       <img

@@ -26,6 +26,7 @@ export default function InterestedBuyersPage() {
       };
       
 
+
     useEffect(() => {
         fetchInterestedBuyers();
     }, []);
