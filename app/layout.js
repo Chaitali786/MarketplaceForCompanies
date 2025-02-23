@@ -7,7 +7,7 @@ import "./globals.css";
 
 export default function RootLayout({ children }) {
     const [userRole, setUserRole] = useState(() => {
-        // ✅ Initialize from localStorage if available
+        //Initialize from localStorage if available
         return typeof window !== "undefined" ? localStorage.getItem("userRole") : null;
     });
 
@@ -22,7 +22,7 @@ export default function RootLayout({ children }) {
                         .single();
                     if (profile?.role) {
                         setUserRole(profile.role.toLowerCase());
-                        localStorage.setItem("userRole", profile.role.toLowerCase()); // ✅ Store in localStorage
+                        localStorage.setItem("userRole", profile.role.toLowerCase()); //Store in localStorage
                     }
                 }
             } catch (error) {

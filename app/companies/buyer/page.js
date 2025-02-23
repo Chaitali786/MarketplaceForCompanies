@@ -25,7 +25,7 @@ export default function InterestedBuyersPage() {
       const filteredBuyers = data.filter(
         (buyer) => buyer.companies?.seller_email === userEmail
       );
-      setBuyers(filteredBuyers || []); // ✅ Now this works
+      setBuyers(filteredBuyers || []); 
     }
   };
 
@@ -44,7 +44,7 @@ export default function InterestedBuyersPage() {
           return;
         }
 
-        await fetchInterests(user.email); // ✅ Call fetchInterests here
+        await fetchInterests(user.email); 
       }
     };
 

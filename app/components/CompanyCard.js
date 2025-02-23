@@ -33,7 +33,7 @@ export default function CompanyCard({ company, userRole }) {
   return (
     <div className="border p-4 rounded-lg shadow h-72 flex flex-col justify-between">
     <img
-      src={company.image_url || "https://via.placeholder.com/150"}
+      src={`/Images/default-company.png`} //src={company.image_url || "https://via.placeholder.com/150"}
       alt={company.name}
       className="w-full h-36 object-cover rounded"
     />
@@ -44,7 +44,7 @@ export default function CompanyCard({ company, userRole }) {
     </div>
     {userRole === "buyer" && (
         interestExpressed ? (
-          <p className="mt-3 text-green-600 font-medium">✅ Thank you!</p> // ✅ Show Thank you message
+          <p className="mt-3 text-green-600 font-medium">✅ Thank you!</p> 
         ) : (
           <button
             onClick={handleClick}

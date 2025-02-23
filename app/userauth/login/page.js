@@ -7,8 +7,8 @@ import { supabase } from "../../../lib/supabase";
 export default function LoginPage() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [message, setMessage] = useState(""); // ✅ Define message state
-    const [error, setError] = useState(""); // ✅ Define error state
+    const [message, setMessage] = useState(""); // Define message state
+    const [error, setError] = useState(""); //  Define error state
     const router = useRouter();
 
     const handleSubmit = async (e) => {
@@ -31,8 +31,11 @@ export default function LoginPage() {
                     .eq("id", user.id)
                     .single();
                 if (profile?.role) {
-                    localStorage.setItem("userRole", profile.role.toLowerCase()); // ✅ Store role in localStorage
-                    router.push(profile.role.toLowerCase() === "buyer" ? "/companies" : "/companies/sell");
+                    localStorage.setItem("userRole", profile.role.toLowerCase()); //  Store role in localStorage
+                    setTimeout(() => {
+                        router.push(profile.role.toLowerCase() === "buyer" ? "/companies" : "/companies/sell");
+                    }, 0);
+                    
                 } else {
                     throw new Error("Invalid role. Please contact admin.");
                 }
@@ -45,8 +48,8 @@ export default function LoginPage() {
     return (
         <div className="max-w-md mx-auto mt-10 p-4 border rounded shadow">
             <h1 className="text-2xl font-bold mb-4">Login</h1>
-            {message && <p className="text-green-500 mb-2">{message}</p>} {/* ✅ Display success */}
-            {error && <p className="text-red-500 mb-2">{error}</p>} {/* ✅ Display error */}
+            {message && <p className="text-green-500 mb-2">{message}</p>} 
+            {error && <p className="text-red-500 mb-2">{error}</p>} 
             <form onSubmit={handleSubmit}>
                 <input
                     type="email"

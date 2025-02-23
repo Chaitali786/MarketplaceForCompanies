@@ -9,7 +9,7 @@ export default function CompaniesPage() {
     const [filteredCompanies, setFilteredCompanies] = useState([]);
     const [userRole, setUserRole] = useState(null);
 
-    // ✅ Filter states
+    // Filter states
     const [searchTerm, setSearchTerm] = useState(""); // Search by name/keywords
     const [priceFilter, setPriceFilter] = useState("all"); // Price range
     const [industryFilter, setIndustryFilter] = useState("all"); // Industry filter
@@ -46,15 +46,15 @@ export default function CompaniesPage() {
                 if (profile?.role) setUserRole(profile.role.toLowerCase());
             }
         } catch (error) {
-            console.error("Error fetching user role:", error.message);
+            console.warn("Error fetching user role:", error.message);
         }
     };
 
-    // ✅ Filter function
+    //  Filter function
     const applyFilters = () => {
         let filtered = [...companies];
 
-        // ✅ Search by name/keywords
+        // Search by name/keywords
         if (searchTerm) {
             filtered = filtered.filter((company) =>
                 company.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -62,7 +62,7 @@ export default function CompaniesPage() {
             );
         }
 
-        // ✅ Filter by price
+        // Filter by price
         if (priceFilter !== "all") {
             filtered = filtered.filter((company) => {
                 const price = parseFloat(company.price);
@@ -74,7 +74,7 @@ export default function CompaniesPage() {
             });
         }
 
-        // ✅ Filter by industry
+        //  Filter by industry
         if (industryFilter !== "all") {
             filtered = filtered.filter((company) =>
                 company.industry.toLowerCase() === industryFilter.toLowerCase()
@@ -84,7 +84,7 @@ export default function CompaniesPage() {
         setFilteredCompanies(filtered);
     };
 
-    // ✅ Auto-apply filters on change
+    // Auto-apply filters on change
     useEffect(() => {
         applyFilters();
     }, [searchTerm, priceFilter, industryFilter, companies]);
@@ -94,14 +94,14 @@ export default function CompaniesPage() {
         getUserRole();
     }, []);
 
-    // ✅ Get unique industries for dropdown
+    // Get unique industries for dropdown
     const uniqueIndustries = ["all", ...new Set(companies.map((c) => c.industry))];
 
     return (
         <div className="container mx-auto p-4">
             <h1 className="text-2xl font-bold mb-4">Company Listings</h1>
 
-            {/* ✅ Filter Section */}
+            {/* Filter Section */}
             <div className="mb-4 flex flex-wrap items-center gap-4">
                 {/* Search Input */}
                 <input
@@ -139,7 +139,7 @@ export default function CompaniesPage() {
                 </select>
             </div>
 
-            {/* ✅ Company Cards */}
+            {/*  Company Cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {filteredCompanies.length > 0 ? (
                     filteredCompanies.map((company) => (

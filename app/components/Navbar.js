@@ -52,7 +52,11 @@ export default function Navbar(userRole) {
                     {username ? (
                         <span className="mr-4">Welcome, {username}!</span>
                     ) : (
-                        <Link href="/userauth/signup" className="hover:underline">SignUp</Link>
+                      <>
+                      <Link href="/userauth/signup" className="hover:underline">SignUp</Link>
+                      
+                      </>
+                        
                     )}
 
                     <Link href="/companies" className="hover:underline">Companies</Link>

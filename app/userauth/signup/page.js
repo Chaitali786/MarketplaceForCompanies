@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { useRouter } from "next/navigation"; // ✅ Use 'next/navigation' for Next.js 13+
+import { useRouter } from "next/navigation"; 
 import { signUp } from '../../../lib/auth';
 
 export default function Signup() {
@@ -9,7 +9,7 @@ export default function Signup() {
     const [role, setRole] = useState("buyer");
     const [message, setMessage] = useState("");
     const [error, setError] = useState("");
-    const router = useRouter(); // ✅ Initialize router for navigation
+    const router = useRouter(); // Initialize router for navigation
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -18,9 +18,9 @@ export default function Signup() {
 
         try {
             const result = await signUp(email, password, role);
-            setMessage(result.message); // ✅ Show success message
+            setMessage(result.message); 
             setTimeout(() => {
-                router.push("/userauth/login"); // ✅ Redirect to login after 3 seconds
+                router.push("/userauth/login"); 
             }, 3000);
         } catch (err) {
             setError(err.message || "Something went wrong. Please try again.");
