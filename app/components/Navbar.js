@@ -2,24 +2,24 @@
 
 import { useEffect, useState } from "react";
 import { supabase } from "../../lib/supabase";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation"; // ✅ Import usePathname
 import Link from "next/link";
+import { ShoppingCart } from "lucide-react";
 
 export default function Navbar(userRole) {
   const router = useRouter();
+  const pathname = usePathname(); // ✅ Get current path
   const [username, setUsername] = useState(null);
-  console.log("User Role at Navbar:", userRole);
+
   useEffect(() => {
     const fetchUser = async () => {
       const { data: { session } } = await supabase.auth.getSession();
-      console.log("Session:", session); // ✅ Check if session is available
 
       if (session?.user) {
         setUsername(session.user.email);
       }
     };
 
-    // Listen to auth state changes
     const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
       if (session?.user) {
         setUsername(session.user.email);
@@ -41,7 +41,7 @@ export default function Navbar(userRole) {
       alert(error.message);
     } else {
       alert("Logged out successfully!");
-      router.push("/userauth/login");
+      router.push("/");
     }
   };
 
@@ -50,22 +50,25 @@ export default function Navbar(userRole) {
       <div className="container mx-auto flex justify-between items-center">
         <Link href="/" className="text-xl font-bold">Marketplace</Link>
 
-        <div className="space-x-4">
+        <div className="flex space-x-4 items-center">
           {username ? (
             <span className="mr-4">Welcome, {username}!</span>
           ) : (
-            <Link href="/userauth/login" className="mr-4">
-              
-            </Link>
+            <Link href="/userauth/login" className="mr-4"></Link>
           )}
 
-          <Link href="/userauth/signup" className="hover:underline">SignUp</Link>
+          {!username && <Link href="/userauth/signup" className="hover:underline">SignUp</Link>}
           <Link href="/companies" className="hover:underline">Companies</Link>
-          
-          {/* ✅ Show "Sell" button only if userRole is "seller" */}
-          {userRole?.userRole === "seller" && <a href="/companies/sell" className="mr-4">Sell</a>}
-          {userRole?.userRole === "seller" && <a href="/companies/buyer" className="mr-4">Cart</a>}
-          
+
+          {/* ✅ Show "Sell" and "Cart" ONLY if user is logged in AND is a seller */}
+          {username && userRole?.userRole === "seller" && pathname !== "/" && (
+            <>
+              <Link href="/companies/sell" className="mr-4">Sell</Link>
+              <Link href="/companies/buyer" className="flex items-center gap-1 hover:underline">
+              <ShoppingCart size={16} />Cart</Link>
+            </>
+          )}
+
           {username && (
             <button onClick={handleLogout} className="bg-red-500 px-4 py-2 rounded">
               Logout
